@@ -10,7 +10,7 @@ int main() {
 
 	switch (ismonth(date)) {
 	case true:
-		switch (ismonth(&date[2])) {
+		switch (ismonth(date + 2)) {
 		case true:
 			printf("AMBIGUOUS");
 			break;
@@ -22,7 +22,7 @@ int main() {
 		break;
 
 	case false:
-		switch (ismonth(&date[2])) {
+		switch (ismonth(date + 2)) {
 		case true:
 			printf("YYMM");
 			break;
