@@ -1,38 +1,42 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 int main() {
 	int K, len;
 	char S[5001];
-	char sub_S[5][5001];
-
-	for (int i = 0; i < 5; i++) {
-		sub_S[i][0] = '\0';
-	}
+	char* temp;
+	char** sub_S;
 
 	scanf("%d %s", &K, S);
 
 	len = strlen(S);
 
+	sub_S = (char**)malloc(sizeof(char*) * K);
+
+	for (int i = 0; i < K; i++) {
+		sub_S[i] = (char*)malloc(sizeof(char) * len + 1);
+		sub_S[i][0] = '\0';
+	}
+
+	temp = (char*)malloc(sizeof(char) * len + 1);
+
 	for (int i = 0; i < len; i++) {
-		for (int j = i; j < len; j++) {
-			int index = 0;
-			char temp[5001];
-			for (int k = i; k <= j; k++) {
-				temp[index++] = S[k];
-			}
-			temp[index] = '\0';
-			for (int k = 0; k < 5; k++) {
+		for (int j = 1; j <= len - i; j++) {
+			strcpy(temp, S + i, j);
+			temp[j] = '\0';
+
+			for (int k = 0; k < K; k++) {
 				if (sub_S[k][0] == '\0') {
 					strcpy(sub_S[k], temp);
 					break;
 				}
-				else if (strcmp(temp, sub_S[k]) == 0) {
+				else if (!strcmp(sub_S[k], temp)) {
 					break;
 				}
-				else if (strcmp(temp, sub_S[k]) < 0) {
-					for (int l = 4; l > k; l--) {
-						strcpy(sub_S[l], sub_S[l - 1]);
+				else if (strcmp(sub_S[k], temp) > 0) {
+					for (int l = K - 2; l >= k; l--) {
+						strcpy(sub_S[l + 1], sub_S[l]);
 					}
 					strcpy(sub_S[k], temp);
 					break;
@@ -40,8 +44,15 @@ int main() {
 			}
 		}
 	}
+	free(temp);
 
-	printf("%s", &sub_S[K - 1]);
+	printf("%s", sub_S[K - 1]);
+
+
+	for (int i = 0; i < K; i++) {
+		free(sub_S[i]);
+	}
+	free(sub_S);
 
 	return 0;
 }
